@@ -13,6 +13,14 @@ defmodule Dotburned.Aggregator do
     GenServer.call(__MODULE__, :buckets_year)
   end
 
+  def biggest_today() do
+    GenServer.call(__MODULE__, :biggest_today)
+  end
+
+  def biggest_week() do
+    GenServer.call(__MODULE__, :biggest_week)
+  end
+
   @impl true
   def start_link(opts \\ []) do
     GenServer.start_link(__MODULE__, :ok, opts ++ [name: __MODULE__])
@@ -23,7 +31,7 @@ defmodule Dotburned.Aggregator do
     PubSub.subscribe(Dotburned.PubSub, "new_burn")
     :timer.send_interval(1000, self(), :update)
 
-    state = %{all_burns: [], needs_update: false, last_updated: DateTime.from_unix!(0), buckets_today: [], buckets_year: []}
+    state = %{all_burns: [], needs_update: false, last_updated: DateTime.from_unix!(0), buckets_today: [], buckets_year: [], biggest_today: 0, biggest_week: 0}
     {:ok, recompute(state)}
   end
 
@@ -35,6 +43,16 @@ defmodule Dotburned.Aggregator do
   @impl true
   def handle_call(:buckets_year, _from, state) do
     {:reply, state.buckets_year, state}
+  end
+
+  @impl true
+  def handle_call(:biggest_today, _from, state) do
+    {:reply, state.biggest_today, state}
+  end
+
+  @impl true
+  def handle_call(:biggest_week, _from, state) do
+    {:reply, state.biggest_week, state}
   end
 
   @impl true
@@ -64,6 +82,7 @@ defmodule Dotburned.Aggregator do
 
     # Recompute at least every 60 secs, but not more often than every second - if needed.
     if (state.needs_update and since >= 1) or since > 5 do
+      task = Task.async(fn -> compute_biggest(now, all_burns) end)
       Logger.info("Recomputing burn aggregates")
       state = Map.put(state, :buckets_today, aggregate!(state.all_burns, DateTime.utc_now(), @resolution_today, div((24 * 3600), @resolution_today)))
       state = Map.put(state, :buckets_year, aggregate!(state.all_burns, DateTime.utc_now(), 3600 * 24, 7))
@@ -77,11 +96,31 @@ defmodule Dotburned.Aggregator do
         buckets_year: state.buckets_year,
       })
 
+      {biggest_today, biggest_week} = Task.await(task)
+      state = Map.put(state, :biggest_today, biggest_today)
+      state = Map.put(state, :biggest_week, biggest_week)
+
+      PubSub.broadcast(Dotburned.PubSub, "biggest", %{
+        biggest_today: biggest_today,
+        biggest_week: biggest_week,
+      })
+
       state
     else
       Logger.debug("No need to recompute burn aggregates since #{since} seconds.")
       state
     end
+  end
+
+  def compute_biggest(now, all_burns) do
+    # Compute biggest today
+    biggest_today = all_burns |> Enum.take_while(fn burn -> DateTime.compare(burn.timestamp, DateTime.add(now, -24 * 3600, :second)) == :gt end) |> Enum.sort_by(& &1.amount) |> Enum.reverse() |> Enum.take(5)
+    # Compute biggest this week
+    biggest_week = all_burns |> Enum.take_while(fn burn -> DateTime.compare(burn.timestamp, DateTime.add(now, -7 * 24 * 3600, :second)) == :gt end) |> Enum.sort_by(& &1.amount) |> Enum.reverse() |> Enum.take(5)
+
+    Logger.debug("Biggest today: #{inspect(biggest_today)}")
+
+    {biggest_today, biggest_week}
   end
 
   def aggregate!(all_burns, now, slice_s, count) do

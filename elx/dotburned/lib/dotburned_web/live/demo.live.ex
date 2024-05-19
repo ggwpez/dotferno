@@ -1,8 +1,10 @@
 defmodule DotburnedWeb.DemoLive do
   use Phoenix.LiveView, layout: {DotburnedWeb.Layouts, :app}
   import DotburnedWeb.CoreComponents
+  import Dotburned.Format
   alias Dotburned.Aggregator
   alias Phoenix.PubSub
+  import Dotburned.Format
   import Logger
 
   @impl true
@@ -12,7 +14,10 @@ defmodule DotburnedWeb.DemoLive do
 
     socket = update_state(%{buckets_today: buckets_today}, socket)
     socket = update_state(%{buckets_year: buckets_year}, socket)
+    socket = assign(socket, biggest_today: Aggregator.biggest_today(), biggest_week: Aggregator.biggest_week())
+
     PubSub.subscribe(Dotburned.PubSub, "buckets")
+    PubSub.subscribe(Dotburned.PubSub, "biggest")
 
     {:ok, socket}
   end
@@ -31,8 +36,27 @@ defmodule DotburnedWeb.DemoLive do
     {:noreply, socket}
   end
 
+  @impl true
+  def handle_info(%{biggest_today: _, biggest_week: _}=e, socket) do
+    {:noreply, assign(socket, e)}
+  end
+
+  @impl true
+  def handle_info(%{event: "new_burn", burn: burn}, socket) do
+    buckets_today = Aggregator.buckets_today()
+    buckets_year = Aggregator.buckets_year()
+
+    socket = update_state(%{buckets_today: buckets_today}, socket)
+    socket = update_state(%{buckets_year: buckets_year}, socket)
+
+    send_update(DotburnedWeb.Components.ChartComponent, id: :chart_today, event: "update_chart", y: socket.assigns.buckets_today, x: socket.assigns.timings_today)
+    send_update(DotburnedWeb.Components.ChartComponent, id: :chart_year, event: "update_chart", y: socket.assigns.buckets_year, x: socket.assigns.timings_year)
+
+    {:noreply, socket}
+  end
+
   def update_state(%{buckets_today: {buckets_today, timings}}, socket) do
-    buckets_today = buckets_today |> Enum.map(fn v -> v / 10000000000 end)
+    buckets_today = buckets_today |> Enum.map(fn x -> Dotburned.Format.plank_to_dot x end)
     x_today = Enum.map(1..length(buckets_today), &(&1))
     sum_today = Enum.sum(buckets_today) |> Kernel.round()
 
@@ -40,7 +64,7 @@ defmodule DotburnedWeb.DemoLive do
   end
 
   def update_state(%{buckets_year: {buckets_year, timings}}, socket) do
-    buckets_year = buckets_year |> Enum.map(fn v -> v / 10000000000 end)
+    buckets_year = buckets_year |> Enum.map(fn x -> Dotburned.Format.plank_to_dot x end)
     x_year = Enum.map(1..length(buckets_year), &(&1))
     sum_year = Enum.sum(buckets_year) |> Kernel.round()
 
@@ -63,73 +87,79 @@ defmodule DotburnedWeb.DemoLive do
     timings_year = assigns.timings_year
 
     ~H"""
-    <div class="flex flex-wrap justify-end">
+    <div class="flex flex-wrap">
 
-    <div class="p-4">
-        <div class="flex rounded-lg items-center flex-col border shadow">
-          <ul class="max-w-md divide-y">
-          <li class="p-3">
-            <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                <div class="flex-1 items-center text-sm font-semibold">
-                  550 DOT
-                </div>
-                <div class="inline-flex min-w-0">
-                  <p class="text-sm font-medium truncate">
-                      10 minutes ago
-                  </p>
-                </div>
+    <div class="flex justify-between w-full">
+      <div class="flex justify-begin">
+        <div class="p-4">
+            <div class="flex rounded-lg items-center flex-col border glow">
+              <ul class="max-w-md divide-y">
+                <%= for v <- Enum.take(@biggest_today, 3) do %>
+                  <li class="p-3">
+                    <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                      <div class="flex-1 items-center text-sm font-semibold">
+                        <%= fmt_plank v.amount %>
+                      </div>
+                      <div class="inline-flex min-w-0">
+                        <p class="text-sm font-medium truncate">
+                          <.link href={link_block v.blockNumber} target="_blank">
+                            <%= fmt_time_ago v.timestamp %>
+                          </.link>
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                <% end %>
+              </ul>
             </div>
-          </li>
-          <li class="p-3">
-            <div class="flex items-center space-x-4 rtl:space-x-reverse">
-              <div class="flex-1 items-center text-sm font-semibold">
-                50 DOT
+        </div>
+        <div class="p-4">
+            <div class="flex rounded-lg items-center flex-col border glow">
+              <ul class="max-w-md divide-y">
+                <%= for v <- Enum.take(@biggest_week, 3) do %>
+                  <li class="p-3">
+                    <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                      <div class="flex-1 items-center text-sm font-semibold">
+                        <%= fmt_plank v.amount %>
+                      </div>
+                      <div class="inline-flex min-w-0">
+                        <p class="text-sm font-medium truncate">
+                          <.link href={link_block v.blockNumber} target="_blank">
+                            <%= fmt_time_ago v.timestamp %>
+                          </.link>
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <div class="p-4">
+            <div class="flex rounded-lg items-center flex-col border glow pt-6 pb-6 pl-8 pr-8">
+              <div class="text-xs">
+                24 hrs
               </div>
-              <div class="inline-flex min-w-0">
-                <p class="text-sm font-medium truncate">
-                    6 hours ago
-                </p>
+              <div class="text-lg font-medium text-[#E6007A]">
+                <%= fmt_dot @sum_today %>
               </div>
             </div>
-          </li>
-          <li class="p-3">
-            <div class="flex items-center space-x-4 rtl:space-x-reverse">
-              <div class="flex-1 items-center text-sm font-semibold">
-                50 DOT
+        </div>
+
+        <div class="p-4">
+            <div class="flex rounded-lg items-center flex-col border glow pt-6 pb-6 pl-8 pr-8">
+              <div class="text-xs">
+                7 days
               </div>
-              <div class="inline-flex min-w-0">
-                <p class="text-sm font-medium truncate">
-                    55 minutes ago
-                </p>
+              <div class="text-lg font-medium text-[#E6007A]">
+                <%= fmt_dot @sum_year %>
               </div>
             </div>
-          </li>
-          </ul>
-
-
         </div>
-    </div>
-
-    <div class="p-4">
-        <div class="flex rounded-lg items-center flex-col border shadow pt-6 pb-6 pl-8 pr-8">
-          <div class="text-xs">
-            24 hrs
-          </div>
-          <div class="text-lg font-medium text-[#E6007A]">
-            <%= @sum_today %>
-          </div>
-        </div>
-    </div>
-
-    <div class="p-4">
-        <div class="flex rounded-lg items-center flex-col border shadow pt-6 pb-6 pl-8 pr-8">
-          <div class="text-xs">
-            7 days
-          </div>
-          <div class="text-lg font-medium text-[#E6007A]">
-            <%= @sum_year %>
-          </div>
-        </div>
+      </div>
     </div>
 
     <!-- card 1 -->

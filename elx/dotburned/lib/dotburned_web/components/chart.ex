@@ -50,7 +50,7 @@ defmodule DotburnedWeb.Components.ChartComponent do
 
   def render(assigns) do
     ~H"""
-    <div class="bg-white border border-gray-200 rounded-lg shadow">
+    <div class="bg-white border border-gray-200 rounded-lg glow">
       <.line_chart
         id={"#{@id}-chart"}
         dataset={[

@@ -27,9 +27,9 @@ defmodule Dotburned.GraphQl do
     IO.puts "Connecting to GraphQL server..."
     client = Req.new(base_url: url) |> AbsintheClient.attach()
 
-    #send(self(), "fetch_new")
-    #:timer.send_after(10_000, self(), "fetch_old")
-    #:timer.send_interval(60_000, self(), "fetch_new")
+    send(self(), "fetch_new")
+    :timer.send_after(10_000, self(), "fetch_old")
+    :timer.send_interval(60_000, self(), "fetch_new")
 
     {:ok, %{ :client => client, :newest_id => "", :oldest_id => ""}}
   end
@@ -91,7 +91,7 @@ defmodule Dotburned.GraphQl do
   defp query(client, pred) do
     query = """
       query {
-        burns(limit: 100, orderBy: id_DESC, where: {#{pred}}) {
+        burns(limit: 10, orderBy: id_DESC, where: {#{pred}}) {
           id
           amount
           aggregated
