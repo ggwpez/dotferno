@@ -134,7 +134,7 @@ defmodule DotburnedWeb.DemoLive do
         <div class="p-4">
           <div class="flex items-center mb-3">
                 <h2 class="text-lg font-medium">
-                  Biggest burns today
+                  Top today
                 </h2>
             </div>
             <div class="flex rounded-lg items-center flex-col border glow">
@@ -161,7 +161,7 @@ defmodule DotburnedWeb.DemoLive do
         <div class="p-4">
             <div class="flex items-center mb-3">
                 <h2 class="text-lg font-medium">
-                  Biggest burns this week
+                  Top this week
                 </h2>
             </div>
             <div class="flex rounded-lg items-center flex-col border glow">
