@@ -90,53 +90,6 @@ defmodule DotburnedWeb.DemoLive do
     <div class="flex flex-wrap">
 
     <div class="flex justify-between w-full">
-      <div class="flex justify-begin">
-        <div class="p-4">
-            <div class="flex rounded-lg items-center flex-col border glow">
-              <ul class="max-w-md divide-y">
-                <%= for v <- Enum.take(@biggest_today, 3) do %>
-                  <li class="p-3">
-                    <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                      <div class="flex-1 items-center text-sm font-semibold">
-                        <%= fmt_plank v.amount %>
-                      </div>
-                      <div class="inline-flex min-w-0">
-                        <p class="text-sm font-medium truncate">
-                          <.link href={link_block v.blockNumber} target="_blank">
-                            <%= fmt_time_ago v.timestamp %>
-                          </.link>
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                <% end %>
-              </ul>
-            </div>
-        </div>
-        <div class="p-4">
-            <div class="flex rounded-lg items-center flex-col border glow">
-              <ul class="max-w-md divide-y">
-                <%= for v <- Enum.take(@biggest_week, 3) do %>
-                  <li class="p-3">
-                    <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                      <div class="flex-1 items-center text-sm font-semibold">
-                        <%= fmt_plank v.amount %>
-                      </div>
-                      <div class="inline-flex min-w-0">
-                        <p class="text-sm font-medium truncate">
-                          <.link href={link_block v.blockNumber} target="_blank">
-                            <%= fmt_time_ago v.timestamp %>
-                          </.link>
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                <% end %>
-              </ul>
-            </div>
-        </div>
-      </div>
-
       <div class="flex justify-end">
         <div class="p-4">
             <div class="flex rounded-lg items-center flex-col border glow pt-6 pb-6 pl-8 pr-8">
@@ -162,6 +115,7 @@ defmodule DotburnedWeb.DemoLive do
       </div>
     </div>
 
+
     <!-- card 1 -->
     <div class="p-4 w-full">
         <div class="flex rounded-lg h-full flex-col">
@@ -175,6 +129,63 @@ defmodule DotburnedWeb.DemoLive do
             </div>
         </div>
     </div>
+
+    <div class="flex justify-begin">
+        <div class="p-4">
+          <div class="flex items-center mb-3">
+                <h2 class="text-lg font-medium">
+                  Biggest burns today
+                </h2>
+            </div>
+            <div class="flex rounded-lg items-center flex-col border glow">
+              <ul class="max-w-md divide-y">
+                <%= for v <- Enum.take(@biggest_today, 3) do %>
+                  <li class="p-3">
+                    <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                      <div class="flex-1 items-center text-sm font-semibold">
+                        <%= fmt_plank v.amount %>
+                      </div>
+                      <div class="inline-flex min-w-0">
+                        <p class="text-sm font-medium truncate">
+                          <.link href={link_block v.blockNumber} target="_blank">
+                            <%= fmt_time_ago v.timestamp %>
+                          </.link>
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+        </div>
+        <div class="p-4">
+            <div class="flex items-center mb-3">
+                <h2 class="text-lg font-medium">
+                  Biggest burns this week
+                </h2>
+            </div>
+            <div class="flex rounded-lg items-center flex-col border glow">
+              <ul class="max-w-md divide-y">
+                <%= for v <- Enum.take(@biggest_week, 3) do %>
+                  <li class="p-3">
+                    <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                      <div class="flex-1 items-center text-sm font-semibold">
+                        <%= fmt_plank v.amount %>
+                      </div>
+                      <div class="inline-flex min-w-0">
+                        <p class="text-sm font-medium truncate">
+                          <.link href={link_block v.blockNumber} target="_blank">
+                            <%= fmt_time_ago v.timestamp %>
+                          </.link>
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+        </div>
+      </div>
 
     <div class="p-4 w-full">
       <div class="flex rounded-lg h-full flex-col">

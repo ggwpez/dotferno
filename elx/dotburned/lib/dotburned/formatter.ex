@@ -41,6 +41,6 @@ defmodule Dotburned.Format do
   end
 
   def link_block(block) do
-    "https://polkadot.subscan.io/block/#{block}?tab=event"
+    "https://polkadot.subscan.io/event?block=#{block}&page=1&time_dimension=date&module=balances&event_id=burned"
   end
 end

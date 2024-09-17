@@ -92,7 +92,7 @@ defmodule Dotburned.GraphQl do
   defp query(client, pred) do
     query = """
       query {
-        burns(limit: 1000, orderBy: id_DESC, where: {#{pred}}) {
+        burns(limit: 10, orderBy: id_DESC, where: {#{pred}}) {
           id
           amount
           aggregated
