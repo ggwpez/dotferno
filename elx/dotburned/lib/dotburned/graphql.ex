@@ -19,7 +19,7 @@ defmodule Dotburned.GraphQl do
   require Logger
 
   def start_link(opts \\ []) do
-    GenServer.start_link(__MODULE__, %{url: "https://3e8b1a97-78b3-4bb6-8144-63621330abbd.squids.live/dotburned/v/v1/graphql"}, opts)
+    GenServer.start_link(__MODULE__, %{url: "https://dotburned.squids.live/dotburned/v/v1/graphql"}, opts)
   end
 
   @impl true
@@ -91,7 +91,7 @@ defmodule Dotburned.GraphQl do
   defp query(client, pred) do
     query = """
       query {
-        burns(limit: 10, orderBy: id_DESC, where: {#{pred}}) {
+        burns(limit: 1000, orderBy: id_DESC, where: {#{pred}}) {
           id
           amount
           aggregated
