@@ -19,7 +19,8 @@ defmodule Dotburned.GraphQl do
   require Logger
 
   def start_link(opts \\ []) do
-    GenServer.start_link(__MODULE__, %{url: "https://dotburned.squids.live/dotburned/v/v1/graphql"}, opts)
+    url = Application.get_env(:dotburned, :subsquid_url)
+    GenServer.start_link(__MODULE__, %{url: url}, opts)
   end
 
   @impl true
