@@ -17,8 +17,8 @@ defmodule DotburnedWeb.Router do
   scope "/", DotburnedWeb do
     pipe_through :browser
 
-    live "/demo", DemoLive
-    get "/", PageController, :home
+    live "/", DemoLive
+    #get "/", PageController, :home
   end
 
   # Other scopes may use custom stacks.

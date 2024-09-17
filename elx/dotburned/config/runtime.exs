@@ -20,6 +20,14 @@ if System.get_env("PHX_SERVER") do
   config :dotburned, DotburnedWeb.Endpoint, server: true
 end
 
+subsquid_url = System.get_env("SUBSQUID_URL") ||
+  raise """
+  environment variable SUBSQUID_URL is missing.
+  """
+
+config :dotburned,
+    subsquid_url: subsquid_url
+
 if config_env() == :prod do
   #database_url =
   #  System.get_env("DATABASE_URL") ||
@@ -47,11 +55,6 @@ if config_env() == :prod do
 
   config :dotburned, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
-  subsquid_url = System.get_env("SUBSQUID_URL") ||
-    raise """
-    environment variable SUBSQUID_URL is missing.
-    """
-
   config :dotburned, DotburnedWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     http: [
@@ -62,8 +65,7 @@ if config_env() == :prod do
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: port
     ],
-    secret_key_base: secret_key_base,
-    subsquid_url: subsquid_url,
+    secret_key_base: secret_key_base
 
   # ## SSL Support
   #
