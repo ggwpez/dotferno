@@ -1,3 +1,3 @@
 ExUnit.start()
 
-#Ecto.Adapters.SQL.Sandbox.mode(Dotburned.Repo, :manual)
+#Ecto.Adapters.SQL.Sandbox.mode(Dotferno.Repo, :manual)

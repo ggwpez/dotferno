@@ -1,12 +1,12 @@
-defmodule DotburnedWeb do
+defmodule DotfernoWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, components, channels, and so on.
 
   This can be used in your application as:
 
-      use DotburnedWeb, :controller
-      use DotburnedWeb, :html
+      use DotfernoWeb, :controller
+      use DotfernoWeb, :html
 
   The definitions below will be executed for every controller,
   component, etc, so keep them short and clean, focused
@@ -40,10 +40,10 @@ defmodule DotburnedWeb do
     quote do
       use Phoenix.Controller,
         formats: [:html, :json],
-        layouts: [html: DotburnedWeb.Layouts]
+        layouts: [html: DotfernoWeb.Layouts]
 
       import Plug.Conn
-      import DotburnedWeb.Gettext
+      import DotfernoWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -52,7 +52,7 @@ defmodule DotburnedWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {DotburnedWeb.Layouts, :app}
+        layout: {DotfernoWeb.Layouts, :app}
 
       unquote(html_helpers())
     end
@@ -84,8 +84,8 @@ defmodule DotburnedWeb do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
-      import DotburnedWeb.CoreComponents
-      import DotburnedWeb.Gettext
+      import DotfernoWeb.CoreComponents
+      import DotfernoWeb.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
@@ -98,9 +98,9 @@ defmodule DotburnedWeb do
   def verified_routes do
     quote do
       use Phoenix.VerifiedRoutes,
-        endpoint: DotburnedWeb.Endpoint,
-        router: DotburnedWeb.Router,
-        statics: DotburnedWeb.static_paths()
+        endpoint: DotfernoWeb.Endpoint,
+        router: DotfernoWeb.Router,
+        statics: DotfernoWeb.static_paths()
     end
   end
 

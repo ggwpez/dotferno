@@ -1,5 +1,5 @@
-defmodule Dotburned.Repo do
+defmodule Dotferno.Repo do
   use Ecto.Repo,
-    otp_app: :dotburned,
+    otp_app: :dotferno,
     adapter: Ecto.Adapters.Postgres
 end

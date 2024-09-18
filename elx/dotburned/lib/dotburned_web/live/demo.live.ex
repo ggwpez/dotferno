@@ -1,10 +1,10 @@
-defmodule DotburnedWeb.DemoLive do
-  use Phoenix.LiveView, layout: {DotburnedWeb.Layouts, :app}
-  import DotburnedWeb.CoreComponents
-  import Dotburned.Format
-  alias Dotburned.Aggregator
+defmodule DotfernoWeb.DemoLive do
+  use Phoenix.LiveView, layout: {DotfernoWeb.Layouts, :app}
+  import DotfernoWeb.CoreComponents
+  import Dotferno.Format
+  alias Dotferno.Aggregator
   alias Phoenix.PubSub
-  import Dotburned.Format
+  import Dotferno.Format
   import Logger
 
   @impl true
@@ -16,8 +16,8 @@ defmodule DotburnedWeb.DemoLive do
     socket = update_state(%{buckets_year: buckets_year}, socket)
     socket = assign(socket, biggest_today: Aggregator.biggest_today(), biggest_week: Aggregator.biggest_week())
 
-    PubSub.subscribe(Dotburned.PubSub, "buckets")
-    PubSub.subscribe(Dotburned.PubSub, "biggest")
+    PubSub.subscribe(Dotferno.PubSub, "buckets")
+    PubSub.subscribe(Dotferno.PubSub, "biggest")
 
     {:ok, socket}
   end
@@ -25,14 +25,14 @@ defmodule DotburnedWeb.DemoLive do
   @impl true
   def handle_info(%{buckets_today: _}=e, socket) do
     socket = update_state(e, socket)
-    send_update(DotburnedWeb.Components.ChartComponent, id: :chart_today, event: "update_chart", y: socket.assigns.buckets_today, x: socket.assigns.timings_today)
+    send_update(DotfernoWeb.Components.ChartComponent, id: :chart_today, event: "update_chart", y: socket.assigns.buckets_today, x: socket.assigns.timings_today)
     {:noreply, socket}
   end
 
   @impl true
   def handle_info(%{buckets_year: _}=e, socket) do
     socket = update_state(e, socket)
-    send_update(DotburnedWeb.Components.ChartComponent, id: :chart_year, event: "update_chart", y: socket.assigns.buckets_year, x: socket.assigns.timings_year)
+    send_update(DotfernoWeb.Components.ChartComponent, id: :chart_year, event: "update_chart", y: socket.assigns.buckets_year, x: socket.assigns.timings_year)
     {:noreply, socket}
   end
 
@@ -49,14 +49,14 @@ defmodule DotburnedWeb.DemoLive do
     socket = update_state(%{buckets_today: buckets_today}, socket)
     socket = update_state(%{buckets_year: buckets_year}, socket)
 
-    send_update(DotburnedWeb.Components.ChartComponent, id: :chart_today, event: "update_chart", y: socket.assigns.buckets_today, x: socket.assigns.timings_today)
-    send_update(DotburnedWeb.Components.ChartComponent, id: :chart_year, event: "update_chart", y: socket.assigns.buckets_year, x: socket.assigns.timings_year)
+    send_update(DotfernoWeb.Components.ChartComponent, id: :chart_today, event: "update_chart", y: socket.assigns.buckets_today, x: socket.assigns.timings_today)
+    send_update(DotfernoWeb.Components.ChartComponent, id: :chart_year, event: "update_chart", y: socket.assigns.buckets_year, x: socket.assigns.timings_year)
 
     {:noreply, socket}
   end
 
   def update_state(%{buckets_today: {buckets_today, timings}}, socket) do
-    buckets_today = buckets_today |> Enum.map(fn x -> Dotburned.Format.plank_to_dot x end)
+    buckets_today = buckets_today |> Enum.map(fn x -> Dotferno.Format.plank_to_dot x end)
     x_today = Enum.map(1..length(buckets_today), &(&1))
     sum_today = Enum.sum(buckets_today) |> Kernel.round()
 
@@ -64,7 +64,7 @@ defmodule DotburnedWeb.DemoLive do
   end
 
   def update_state(%{buckets_year: {buckets_year, timings}}, socket) do
-    buckets_year = buckets_year |> Enum.map(fn x -> Dotburned.Format.plank_to_dot x end)
+    buckets_year = buckets_year |> Enum.map(fn x -> Dotferno.Format.plank_to_dot x end)
     x_year = Enum.map(1..length(buckets_year), &(&1))
     sum_year = Enum.sum(buckets_year) |> Kernel.round()
 
@@ -125,7 +125,7 @@ defmodule DotburnedWeb.DemoLive do
                 </h2>
             </div>
             <div>
-              <.live_component module={DotburnedWeb.Components.ChartComponent} id={:chart_today} y={buckets_today} x={timings_today} type="bar" />
+              <.live_component module={DotfernoWeb.Components.ChartComponent} id={:chart_today} y={buckets_today} x={timings_today} type="bar" />
             </div>
         </div>
     </div>
@@ -195,7 +195,7 @@ defmodule DotburnedWeb.DemoLive do
               </h2>
           </div>
           <div>
-            <.live_component module={DotburnedWeb.Components.ChartComponent} id={:chart_year} y={buckets_year} x={timings_year} type="bar" />
+            <.live_component module={DotfernoWeb.Components.ChartComponent} id={:chart_year} y={buckets_year} x={timings_year} type="bar" />
           </div>
       </div>
     </div>

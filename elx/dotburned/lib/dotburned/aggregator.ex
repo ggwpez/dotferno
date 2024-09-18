@@ -1,9 +1,9 @@
-defmodule Dotburned.Aggregator do
+defmodule Dotferno.Aggregator do
   use GenServer
   alias Phoenix.PubSub
   require Logger
-  alias Dotburned.Schema.Burn
-  alias Dotburned.Schema.Aggregate
+  alias Dotferno.Schema.Burn
+  alias Dotferno.Schema.Aggregate
 
   def buckets_today() do
     GenServer.call(__MODULE__, :buckets_today)
@@ -28,7 +28,7 @@ defmodule Dotburned.Aggregator do
 
   @impl true
   def init(:ok) do
-    PubSub.subscribe(Dotburned.PubSub, "new_burn")
+    PubSub.subscribe(Dotferno.PubSub, "new_burn")
     :timer.send_interval(1000, self(), :update)
 
     state = %{all_burns: [], needs_update: false, last_updated: DateTime.from_unix!(0), buckets_today: [], buckets_year: [], biggest_today: 0, biggest_week: 0}
@@ -89,10 +89,10 @@ defmodule Dotburned.Aggregator do
       state = Map.put(state, :needs_update, false)
       state = Map.put(state, :last_updated, now)
 
-      PubSub.broadcast(Dotburned.PubSub, "buckets", %{
+      PubSub.broadcast(Dotferno.PubSub, "buckets", %{
         buckets_today: state.buckets_today,
       })
-      PubSub.broadcast(Dotburned.PubSub, "buckets", %{
+      PubSub.broadcast(Dotferno.PubSub, "buckets", %{
         buckets_year: state.buckets_year,
       })
 
@@ -100,7 +100,7 @@ defmodule Dotburned.Aggregator do
       state = Map.put(state, :biggest_today, biggest_today)
       state = Map.put(state, :biggest_week, biggest_week)
 
-      PubSub.broadcast(Dotburned.PubSub, "biggest", %{
+      PubSub.broadcast(Dotferno.PubSub, "biggest", %{
         biggest_today: biggest_today,
         biggest_week: biggest_week,
       })

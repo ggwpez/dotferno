@@ -1,4 +1,4 @@
-# Dotburned
+# Dotferno
 
 To start your Phoenix server:
 

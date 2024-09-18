@@ -1,4 +1,4 @@
-defmodule Dotburned.Format do
+defmodule Dotferno.Format do
   def plank_to_dot(amount) do
     amount / 10000000000
   end

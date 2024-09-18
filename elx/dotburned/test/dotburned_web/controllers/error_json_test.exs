@@ -1,12 +1,12 @@
-defmodule DotburnedWeb.ErrorJSONTest do
-  use DotburnedWeb.ConnCase, async: true
+defmodule DotfernoWeb.ErrorJSONTest do
+  use DotfernoWeb.ConnCase, async: true
 
   test "renders 404" do
-    assert DotburnedWeb.ErrorJSON.render("404.json", %{}) == %{errors: %{detail: "Not Found"}}
+    assert DotfernoWeb.ErrorJSON.render("404.json", %{}) == %{errors: %{detail: "Not Found"}}
   end
 
   test "renders 500" do
-    assert DotburnedWeb.ErrorJSON.render("500.json", %{}) ==
+    assert DotfernoWeb.ErrorJSON.render("500.json", %{}) ==
              %{errors: %{detail: "Internal Server Error"}}
   end
 end

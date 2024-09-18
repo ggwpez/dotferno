@@ -1,4 +1,4 @@
-defmodule Dotburned.Schema.Burn do
+defmodule Dotferno.Schema.Burn do
   defstruct [:id, :blockNumber, :timestamp, :amount, :aggregated]
 
   def from_map(%{"id" => id, "blockNumber" => blockNumber, "timestamp" => timestamp, "amount" => amount, "aggregated" => aggregated}) do
@@ -13,13 +13,13 @@ defmodule Dotburned.Schema.Burn do
   end
 end
 
-defmodule Dotburned.GraphQl do
+defmodule Dotferno.GraphQl do
   use GenServer
   alias Phoenix.PubSub
   require Logger
 
   def start_link(opts \\ []) do
-    url = Application.get_env(:dotburned, :subsquid_url)
+    url = Application.get_env(:dotferno, :subsquid_url)
     GenServer.start_link(__MODULE__, %{url: url}, opts)
   end
 
@@ -42,8 +42,8 @@ defmodule Dotburned.GraphQl do
       {:ok, []} -> {:noreply, state}
       {:ok, burns} ->
         burns = for burn <- burns do
-          burn = Dotburned.Schema.Burn.from_map(burn)
-          PubSub.broadcast(Dotburned.PubSub, "new_burn", burn)
+          burn = Dotferno.Schema.Burn.from_map(burn)
+          PubSub.broadcast(Dotferno.PubSub, "new_burn", burn)
           burn.id
         end
         first = Enum.at(burns, 0)
@@ -63,8 +63,8 @@ defmodule Dotburned.GraphQl do
       {:ok, []} -> {:noreply, state}
       {:ok, burns} ->
         last = for burn <- burns do
-          burn = Dotburned.Schema.Burn.from_map(burn)
-          PubSub.broadcast(Dotburned.PubSub, "new_burn", burn)
+          burn = Dotferno.Schema.Burn.from_map(burn)
+          PubSub.broadcast(Dotferno.PubSub, "new_burn", burn)
           burn
         end |> List.last()
 

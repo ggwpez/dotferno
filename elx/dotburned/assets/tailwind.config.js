@@ -8,8 +8,8 @@ const path = require("path")
 module.exports = {
   content: [
     "./js/**/*.js",
-    "../lib/dotburned_web.ex",
-    "../lib/dotburned_web/**/*.*ex"
+    "../lib/dotferno_web.ex",
+    "../lib/dotferno_web/**/*.*ex"
   ],
   theme: {
     extend: {

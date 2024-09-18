@@ -1,6 +1,6 @@
-defmodule Dotburned do
+defmodule Dotferno do
   @moduledoc """
-  Dotburned keeps the contexts that define your domain
+  Dotferno keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless

@@ -1,5 +1,5 @@
-defmodule DotburnedWeb.PageController do
-  use DotburnedWeb, :controller
+defmodule DotfernoWeb.PageController do
+  use DotfernoWeb, :controller
 
   def home(conn, _params) do
     # The home page is often custom made,

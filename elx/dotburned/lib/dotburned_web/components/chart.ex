@@ -1,4 +1,4 @@
-defmodule DotburnedWeb.Components.Charts do
+defmodule DotfernoWeb.Components.Charts do
   @moduledoc """
   Holds the charts components
   """
@@ -43,9 +43,9 @@ defmodule DotburnedWeb.Components.Charts do
   end
 end
 
-defmodule DotburnedWeb.Components.ChartComponent do
+defmodule DotfernoWeb.Components.ChartComponent do
   use Phoenix.LiveComponent
-  import DotburnedWeb.Components.Charts
+  import DotfernoWeb.Components.Charts
   require Logger
 
   def render(assigns) do

@@ -7,19 +7,19 @@
 # General application configuration
 import Config
 
-config :dotburned,
+config :dotferno,
   ecto_repos: [],
   generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint
-config :dotburned, DotburnedWeb.Endpoint,
+config :dotferno, DotfernoWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
-    formats: [html: DotburnedWeb.ErrorHTML, json: DotburnedWeb.ErrorJSON],
+    formats: [html: DotfernoWeb.ErrorHTML, json: DotfernoWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: Dotburned.PubSub,
+  pubsub_server: Dotferno.PubSub,
   live_view: [signing_salt: "yw19HLdh"]
 
 # Configures the mailer
@@ -29,12 +29,12 @@ config :dotburned, DotburnedWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :dotburned, Dotburned.Mailer, adapter: Swoosh.Adapters.Local
+config :dotferno, Dotferno.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",
-  dotburned: [
+  dotferno: [
     args:
       ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
     cd: Path.expand("../assets", __DIR__),
@@ -44,7 +44,7 @@ config :esbuild,
 # Configure tailwind (the version is required)
 config :tailwind,
   version: "3.4.0",
-  dotburned: [
+  dotferno: [
     args: ~w(
       --config=tailwind.config.js
       --input=css/app.css

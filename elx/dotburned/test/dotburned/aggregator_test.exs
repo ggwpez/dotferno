@@ -1,16 +1,16 @@
-defmodule DotburnedWeb.AggregatorTest do
+defmodule DotfernoWeb.AggregatorTest do
   use ExUnit.Case
 
-  alias Dotburned.Aggregator
+  alias Dotferno.Aggregator
   alias Phoenix.PubSub
-  alias Dotburned.Schema.Burn
-  alias Dotburned.Schema.Summary
+  alias Dotferno.Schema.Burn
+  alias Dotferno.Schema.Summary
 
   #test "aggregator removes old" do
   #  {:ok, pid} = Aggregator.start_link(name: :test)
 #
   #  for i <- 30..0//-1 do
-  #    PubSub.broadcast(Dotburned.PubSub, "new_burn", %Burn{
+  #    PubSub.broadcast(Dotferno.PubSub, "new_burn", %Burn{
   #      id: -i,
   #      timestamp: DateTime.utc_now() |> DateTime.add(-i, :hour),
   #      aggregated: i * 100,

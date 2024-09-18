@@ -1,5 +1,5 @@
-defmodule DotburnedWeb.PageControllerTest do
-  use DotburnedWeb.ConnCase
+defmodule DotfernoWeb.PageControllerTest do
+  use DotfernoWeb.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")

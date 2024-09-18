@@ -1,10 +1,10 @@
-defmodule DotburnedWeb.PageHTML do
+defmodule DotfernoWeb.PageHTML do
   @moduledoc """
   This module contains pages rendered by PageController.
 
   See the `page_html` directory for all templates available.
   """
-  use DotburnedWeb, :html
+  use DotfernoWeb, :html
 
   embed_templates "page_html/*"
 end

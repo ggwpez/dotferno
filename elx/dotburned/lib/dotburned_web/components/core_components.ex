@@ -1,4 +1,4 @@
-defmodule DotburnedWeb.CoreComponents do
+defmodule DotfernoWeb.CoreComponents do
   @moduledoc """
   Provides core UI components.
 
@@ -17,7 +17,7 @@ defmodule DotburnedWeb.CoreComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import DotburnedWeb.Gettext
+  import DotfernoWeb.Gettext
 
   @doc """
   Renders a modal.
@@ -661,9 +661,9 @@ defmodule DotburnedWeb.CoreComponents do
     # with our gettext backend as first argument. Translations are
     # available in the errors.po file (as we use the "errors" domain).
     if count = opts[:count] do
-      Gettext.dngettext(DotburnedWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(DotfernoWeb.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(DotburnedWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(DotfernoWeb.Gettext, "errors", msg, opts)
     end
   end
 
