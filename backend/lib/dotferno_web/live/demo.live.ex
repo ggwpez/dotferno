@@ -140,20 +140,20 @@ defmodule DotfernoWeb.DemoLive do
             <div class="flex rounded-lg items-center flex-col border glow">
               <ul class="max-w-md divide-y">
                 <%= for v <- Enum.take(@biggest_today, 3) do %>
-                  <li class="p-3">
-                    <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                      <div class="flex-1 items-center text-sm font-semibold">
-                        <%= fmt_plank v.amount %>
-                      </div>
-                      <div class="inline-flex min-w-0">
-                        <p class="text-sm font-medium truncate">
-                          <.link href={link_block v.blockNumber} target="_blank">
+                  <.link href={link_block v.blockNumber} target="_blank">
+                    <li class="p-3">
+                      <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                        <div class="flex-1 items-center text-sm font-semibold">
+                          <%= fmt_plank v.amount %>
+                        </div>
+                        <div class="inline-flex min-w-0">
+                          <p class="text-sm font-medium truncate">
                             <%= fmt_time_ago v.timestamp %>
-                          </.link>
-                        </p>
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </li>
+                    </li>
+                  </.link>
                 <% end %>
               </ul>
             </div>
@@ -167,20 +167,20 @@ defmodule DotfernoWeb.DemoLive do
             <div class="flex rounded-lg items-center flex-col border glow">
               <ul class="max-w-md divide-y">
                 <%= for v <- Enum.take(@biggest_week, 3) do %>
-                  <li class="p-3">
-                    <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                      <div class="flex-1 items-center text-sm font-semibold">
-                        <%= fmt_plank v.amount %>
-                      </div>
-                      <div class="inline-flex min-w-0">
-                        <p class="text-sm font-medium truncate">
-                          <.link href={link_block v.blockNumber} target="_blank">
+                  <.link href={link_block v.blockNumber} target="_blank">
+                    <li class="p-3">
+                      <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                        <div class="flex-1 items-center text-sm font-semibold">
+                          <%= fmt_plank v.amount %>
+                        </div>
+                        <div class="inline-flex min-w-0">
+                          <p class="text-sm font-medium truncate">
                             <%= fmt_time_ago v.timestamp %>
-                          </.link>
-                        </p>
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </li>
+                    </li>
+                  </.link>
                 <% end %>
               </ul>
             </div>

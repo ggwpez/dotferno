@@ -23,9 +23,9 @@
 }
 
 /* BEGIN: Glitch stuff */
-a:hover {
+/*a:hover {
 	animation: glitch_hover 100ms linear;
-}
+}*/
 
 .glow {
 	box-shadow: 0 0 0.5rem rgb(160, 0, 210);
