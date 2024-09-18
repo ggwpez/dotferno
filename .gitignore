@@ -44,3 +44,5 @@ npm-debug.log
 
 # IDE files
 /.idea
+
+*.DS_Store
