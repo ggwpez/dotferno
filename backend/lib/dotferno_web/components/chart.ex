@@ -50,7 +50,7 @@ defmodule DotfernoWeb.Components.ChartComponent do
 
   def render(assigns) do
     ~H"""
-    <div class="bg-white border border-gray-200 rounded-lg glow">
+    <div class="antialiased border dark:border-gray-900 rounded-lg glow">
       <.line_chart
         id={"#{@id}-chart"}
         dataset={[

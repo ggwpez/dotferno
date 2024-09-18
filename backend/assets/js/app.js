@@ -21,6 +21,7 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
+import darkModeHook from "../vendor/dark_mode"
 
 let Hooks = {}
 Hooks.Chart = {
@@ -31,20 +32,35 @@ Hooks.Chart = {
 
     const options = {
       series: seriesData,
-      colors: ['#E6007A'],
       chart: Object.assign({
         background: 'transparent',
+        zoom: {
+          enabled: false,
+        },
       }, chartConfig),
       xaxis: {
+        type: 'datetime',
         categories: categoriesData,
         decimalsInFloat: 0,
+        datetimeFormatter: {
+          day: 'dd MMM',
+          hour: 'HH:mm',
+        },
       },
       yaxis: {
         decimalsInFloat: 0,
       },
+      colors: ['#E6007A'],
+      fill: {
+        opacity: 1.0,
+      },
       stroke: {
         width: 2,
+        opacity: 1.0,
       },
+      theme: {
+        mode: 'dark', 
+      }
     }
 
     const chart = new ApexCharts(this.el, options);
@@ -58,6 +74,8 @@ Hooks.Chart = {
     })
   }
 }
+
+Hooks.DarkThemeToggle = darkModeHook
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {

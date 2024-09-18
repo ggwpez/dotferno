@@ -81,8 +81,15 @@
 -->
 
 <!DOCTYPE html>
-<html lang="en" class="[scrollbar-gutter:stable] light">
+<html lang="en" class="[scrollbar-gutter:stable] dark">
   <head>
+    <script>
+      if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
@@ -94,7 +101,7 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   </head>
-  <body class="bg-white antialiased">
+  <body class="text-gray-900 dark:text-white bg-white dark:bg-gray-900 antialiased antialiased">
     <%= @inner_content %>
   </body>
 </html>

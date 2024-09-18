@@ -92,7 +92,7 @@ defmodule DotfernoWeb.DemoLive do
     <div class="flex justify-between w-full">
       <div class="flex justify-end">
         <div class="p-4">
-            <div class="flex rounded-lg items-center flex-col border glow pt-6 pb-6 pl-8 pr-8">
+            <div class="flex rounded-lg items-center flex-col border glow pt-6 pb-6 pl-8 pr-8 bg-white dark:bg-gray-900 antialiased dark:border-gray-900">
               <div class="text-xs">
                 24 hrs
               </div>
@@ -103,7 +103,7 @@ defmodule DotfernoWeb.DemoLive do
         </div>
 
         <div class="p-4">
-            <div class="flex rounded-lg items-center flex-col border glow pt-6 pb-6 pl-8 pr-8">
+            <div class="flex rounded-lg items-center flex-col border glow pt-6 pb-6 pl-8 pr-8 bg-white dark:bg-gray-900 antialiased dark:border-gray-900">
               <div class="text-xs">
                 7 days
               </div>
@@ -137,12 +137,12 @@ defmodule DotfernoWeb.DemoLive do
                   Top today
                 </h2>
             </div>
-            <div class="flex rounded-lg items-center flex-col border glow">
+            <div class="flex rounded-lg items-center flex-col border glow bg-white dark:bg-gray-900 antialiased dark:border-gray-900">
               <ul class="max-w-md divide-y">
                 <%= for v <- Enum.take(@biggest_today, 3) do %>
                   <.link href={link_block v.blockNumber} target="_blank">
                     <li class="p-3">
-                      <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                      <div class="flex items-center space-x-4 rtl:space-x-reverse text-[#E6007A]">
                         <div class="flex-1 items-center text-sm font-semibold">
                           <%= fmt_plank v.amount %>
                         </div>
@@ -160,16 +160,16 @@ defmodule DotfernoWeb.DemoLive do
         </div>
         <div class="p-4">
             <div class="flex items-center mb-3">
-                <h2 class="text-lg font-medium">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-white">
                   Top this week
                 </h2>
             </div>
-            <div class="flex rounded-lg items-center flex-col border glow">
+            <div class="flex rounded-lg items-center flex-col border glow bg-white dark:bg-gray-900 antialiased dark:border-gray-900">
               <ul class="max-w-md divide-y">
                 <%= for v <- Enum.take(@biggest_week, 3) do %>
                   <.link href={link_block v.blockNumber} target="_blank">
                     <li class="p-3">
-                      <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                      <div class="flex items-center space-x-4 rtl:space-x-reverse text-[#E6007A]">
                         <div class="flex-1 items-center text-sm font-semibold">
                           <%= fmt_plank v.amount %>
                         </div>
@@ -194,7 +194,7 @@ defmodule DotfernoWeb.DemoLive do
                 Burns per day (7 days)
               </h2>
           </div>
-          <div>
+          <div class="text-white">
             <.live_component module={DotfernoWeb.Components.ChartComponent} id={:chart_year} y={buckets_year} x={timings_year} type="bar" />
           </div>
       </div>
