@@ -22,6 +22,11 @@
 	transform: translateZ(0); 
 }
 
+#chart {
+	transform: translateZ(0);
+	@apply bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200;
+  }
+
 /* BEGIN: Glitch stuff */
 /*a:hover {
 	animation: glitch_hover 100ms linear;
@@ -31,12 +36,20 @@
 	box-shadow: 0 0 0.5rem rgb(160, 0, 210);
 }
 
+.dark .glow {
+	box-shadow: 0 0 0.5rem rgb(210, 0, 160);
+}
+
 .glitch {
 	animation: rot 5s linear infinite;
 }
 
 .glitch2 {
 	filter: drop-shadow(0 0 1rem rgb(160, 0, 210));
+}
+
+.dark .glitch2 {
+	filter: drop-shadow(0 0 1rem rgb(210, 0, 160));
 }
 
 .glitch2:hover {
@@ -75,4 +88,4 @@
 	}
 
 }
-/* END: Glitch stuff */
+
