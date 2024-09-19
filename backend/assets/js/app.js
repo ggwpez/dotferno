@@ -23,6 +23,16 @@ import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 import darkModeHook from "../vendor/dark_mode"
 
+function formatBigNumber(n) {
+  if (n > 1_000_000) {
+    return (n / 1_000_000).toFixed(0) + "M"
+  } else if (n > 1_000) {
+    return (n / 1_000).toFixed(0) + "K"
+  } else {
+    return n
+  }
+}
+
 let Hooks = {}
 Hooks.Chart = {
   mounted() {
@@ -32,6 +42,11 @@ Hooks.Chart = {
 
     const options = {
       series: seriesData,
+      tooltip: {
+        x: {
+            format: "MMM yyyy"
+           }
+         },
       chart: Object.assign({
         background: 'transparent',
         zoom: {
@@ -49,6 +64,9 @@ Hooks.Chart = {
       },
       yaxis: {
         decimalsInFloat: 0,
+        labels: {
+          formatter: formatBigNumber,
+        }
       },
       colors: ['#E6007A'],
       fill: {
