@@ -5,6 +5,7 @@ defmodule DotfernoWeb.DemoLive do
   alias Dotferno.Aggregator
   alias Phoenix.PubSub
   import Dotferno.Format
+  import DotfernoWeb.Hooks
   import Logger
 
   @impl true
@@ -15,6 +16,7 @@ defmodule DotfernoWeb.DemoLive do
     socket = update_state(%{buckets_today: buckets_today}, socket)
     socket = update_state(%{buckets_year: buckets_year}, socket)
     socket = assign(socket, biggest_today: Aggregator.biggest_today(), biggest_week: Aggregator.biggest_week())
+    socket = assign(socket, dark_mode_hook: "dark-mode")
 
     PubSub.subscribe(Dotferno.PubSub, "buckets")
     PubSub.subscribe(Dotferno.PubSub, "biggest")
