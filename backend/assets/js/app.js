@@ -40,13 +40,16 @@ Hooks.Chart = {
     const seriesData = JSON.parse(this.el.dataset.series)
     const categoriesData = JSON.parse(this.el.dataset.categories)
 
-    const options = {
+    const isDarkMode = document.documentElement.classList.contains("dark");
+
+    const getOptions = (isDarkMode) => ({
       series: seriesData,
       tooltip: {
         x: {
-            format: "MMM yyyy"
-           }
-         },
+          format: "MMM yyyy"
+        },
+        theme: isDarkMode ? 'dark' : 'light'
+      },
       chart: Object.assign({
         background: 'transparent',
         zoom: {
@@ -61,12 +64,29 @@ Hooks.Chart = {
           day: 'dd MMM',
           hour: 'HH:mm',
         },
+        labels: {
+          style: {
+            colors: isDarkMode ? '#F9FAFB' : '#1F2937',
+          },
+        },
+        axisBorder: {
+          color: isDarkMode ? '#F9FAFB' : '#1F2937',
+        }
       },
       yaxis: {
         decimalsInFloat: 0,
         labels: {
           formatter: formatBigNumber,
-        }
+          style: {
+            colors: isDarkMode ? '#F9FAFB' : '#1F2937',
+          },
+        },
+        axisBorder: {
+          color: isDarkMode ? '#F9FAFB' : '#1F2937',
+        },
+        grid: {
+          borderColor: isDarkMode ? '#374151' : '#E5E7EB',
+        },
       },
       colors: ['#E6007A'],
       fill: {
@@ -77,19 +97,43 @@ Hooks.Chart = {
         opacity: 1.0,
       },
       theme: {
-        mode: 'dark', 
+        mode: isDarkMode ? 'dark' : 'light',
       }
-    }
+    });
 
-    const chart = new ApexCharts(this.el, options);
+    let chart = new ApexCharts(this.el, getOptions(isDarkMode));
     chart.render();
+
     let id = `update-dataset-${this.el.id}`;
     console.log(`Subscribing to ${id}`)
-    
     this.handleEvent(id, data => {
       console.log(`Received ${id} event`)
-      chart.updateSeries(data.dataset)
-    })
+      chart.updateSeries(data.dataset, true);
+    });
+
+    const updateTheme = () => {
+      const isDarkMode = document.documentElement.classList.contains("dark");
+      chart.updateOptions(getOptions(isDarkMode));
+    };
+
+  
+    const themeToggleButton = document.getElementById("theme-toggle");
+    if (themeToggleButton) {
+      themeToggleButton.addEventListener("click", () => {
+        setTimeout(updateTheme, 100);
+      });
+    }
+
+    const observer = new MutationObserver(() => {
+      updateTheme();
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  },
+
+  destroyed() {
+    if (this.chart) {
+      this.chart.destroy();
+    }
   }
 }
 
