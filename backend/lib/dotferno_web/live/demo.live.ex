@@ -89,14 +89,14 @@ defmodule DotfernoWeb.DemoLive do
     ~H"""
     <div class="flex flex-wrap">
 
-    <div class="flex justify-between w-full">
+    <div class="flex flex-col xs:flex-row justify-center md:justify-between w-full">
       <div class="flex justify-end">
         <div class="p-4">
             <div class="flex rounded-lg items-center flex-col border glow pt-6 pb-6 pl-8 pr-8 bg-white dark:bg-gray-900 antialiased dark:border-gray-900">
               <div class="text-xs">
                 24 hrs
               </div>
-              <div class="text-lg font-medium text-[#E6007A]">
+              <div class="text-lg text-center xs:text-left font-medium text-[#E6007A]">
                 <%= fmt_dot @sum_today %>
               </div>
             </div>
@@ -107,7 +107,7 @@ defmodule DotfernoWeb.DemoLive do
               <div class="text-xs">
                 7 days
               </div>
-              <div class="text-lg font-medium text-[#E6007A]">
+              <div class="text-lg text-center md:text-left font-medium text-[#E6007A]">
                 <%= fmt_dot @sum_year %>
               </div>
             </div>
@@ -120,7 +120,7 @@ defmodule DotfernoWeb.DemoLive do
     <div class="p-4 w-full">
         <div class="flex rounded-lg h-full flex-col">
             <div class="flex items-center mb-3">
-                <h2 class="text-lg font-medium">
+                <h2 class="text-lg font-medium text-center md:text-left  w-full">
                   Burns per hour (24 hrs)
                 </h2>
             </div>
@@ -130,13 +130,13 @@ defmodule DotfernoWeb.DemoLive do
         </div>
     </div>
 
-    <div class="flex justify-begin">
-        <div class="p-4">
-          <div class="flex items-center mb-3">
-                <h2 class="text-lg font-medium">
-                  Top today
-                </h2>
-            </div>
+<div class="flex flex-col xs:flex-row xs:justify-center md:justify-start w-full">
+  <div class="p-4 w-full xs:w-1/2 md:w-auto">
+      <div class="flex items-center mb-3">
+        <h2 class="text-lg font-medium text-center md:text-left w-full">
+        Top today
+        </h2>
+      </div>
             <div class="flex rounded-lg items-center flex-col border glow bg-white dark:bg-gray-900 antialiased dark:border-gray-900">
               <ul class="max-w-md divide-y">
                 <%= for v <- Enum.take(@biggest_today, 3) do %>
@@ -158,9 +158,9 @@ defmodule DotfernoWeb.DemoLive do
               </ul>
             </div>
         </div>
-        <div class="p-4">
-            <div class="flex items-center mb-3">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-white">
+        <div class="p-4 w-full xs:w-1/2 md:w-auto">
+            <div class="flex items-center md:items-left mb-3">
+                <h2 class="text-lg font-medium text-center md:text-left w-full md:w-auto font-medium text-gray-900 dark:text-white">
                   Top this week
                 </h2>
             </div>
@@ -190,7 +190,7 @@ defmodule DotfernoWeb.DemoLive do
     <div class="p-4 w-full">
       <div class="flex rounded-lg h-full flex-col">
           <div class="flex items-center mb-3">
-              <h2 class="text-lg font-medium">
+              <h2 class="text-lg font-medium text-center md:text-left w-full">
                 Burns per day (7 days)
               </h2>
           </div>
