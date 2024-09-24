@@ -18,14 +18,24 @@
 	@apply mx-1 py-2 px-4 border-slate-400 text-slate-700 font-medium border-2 rounded-lg transition ease-in-out duration-150 outline-none hover:bg-slate-300;
 }
 
-#chart { 
-	transform: translateZ(0); 
+#chart {
+	transform: translateZ(0);
 }
 
 #chart {
 	transform: translateZ(0);
 	@apply bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200;
-  }
+}
+
+
+.logo-animation {
+	@apply animate-pulse;
+	transition: transform 0.3s ease-in-out;
+}
+
+.group:hover .logo-animation {
+	@apply transform rotate-360 scale-110;
+}
 
 /* BEGIN: Glitch stuff */
 /*a:hover {
@@ -64,7 +74,7 @@
 	25% {
 		filter: drop-shadow(0 0 1rem rgb(160, 160, 210));
 	}
-	
+
 	50% {
 		clip-path: polygon(0 0, 100% 0, 100% 30%, 0 30%);
 	}
@@ -74,7 +84,7 @@
 	}
 
 	100% {
-			
+
 	}
 }
 
@@ -88,4 +98,3 @@
 	}
 
 }
-
