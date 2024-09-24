@@ -28,7 +28,16 @@ defmodule Dotferno.Aggregator do
     PubSub.subscribe(Dotferno.PubSub, "new_burn")
     :timer.send_interval(1000, self(), :update)
 
-    state = %{all_burns: [], needs_update: false, last_updated: DateTime.from_unix!(0), buckets_today: [], buckets_year: [], biggest_today: 0, biggest_week: 0}
+    state = %{
+      all_burns: [],
+      needs_update: false,
+      last_updated: DateTime.from_unix!(0),
+      buckets_today: [],
+      buckets_year: [],
+      biggest_today: 0,
+      biggest_week: 0
+    }
+
     {:ok, recompute(state)}
   end
 
@@ -63,7 +72,7 @@ defmodule Dotferno.Aggregator do
 
     Logger.debug("Ingesting burn into the aggregator. Total burns: #{length(all_burns)}")
 
-    {:noreply, %{state | all_burns: all_burns, needs_update: true }}
+    {:noreply, %{state | all_burns: all_burns, needs_update: true}}
   end
 
   @resolution_today 3600
@@ -78,6 +87,7 @@ defmodule Dotferno.Aggregator do
       |> Enum.sort_by(& &1.id)
       |> Enum.drop_while(fn burn -> DateTime.compare(burn.timestamp, historic_cutoff) == :lt end)
       |> Enum.reverse()
+
     check_ordered(all_burns)
 
     if length(all_burns) != length(state.all_burns) do
@@ -90,16 +100,35 @@ defmodule Dotferno.Aggregator do
     if (state.needs_update and since >= 1) or since > 5 do
       task = Task.async(fn -> compute_biggest(now, all_burns) end)
       Logger.info("Recomputing burn aggregates")
-      state = Map.put(state, :buckets_today, aggregate!(state.all_burns, DateTime.utc_now(), @resolution_today, div((24 * 3600), @resolution_today)))
-      state = Map.put(state, :buckets_year, aggregate!(state.all_burns, DateTime.utc_now(), 3600 * 24, 7))
+
+      state =
+        Map.put(
+          state,
+          :buckets_today,
+          aggregate!(
+            state.all_burns,
+            DateTime.utc_now(),
+            @resolution_today,
+            div(24 * 3600, @resolution_today)
+          )
+        )
+
+      state =
+        Map.put(
+          state,
+          :buckets_year,
+          aggregate!(state.all_burns, DateTime.utc_now(), 3600 * 24, 7)
+        )
+
       state = Map.put(state, :needs_update, false)
       state = Map.put(state, :last_updated, now)
 
       PubSub.broadcast(Dotferno.PubSub, "buckets", %{
-        buckets_today: state.buckets_today,
+        buckets_today: state.buckets_today
       })
+
       PubSub.broadcast(Dotferno.PubSub, "buckets", %{
-        buckets_year: state.buckets_year,
+        buckets_year: state.buckets_year
       })
 
       {biggest_today, biggest_week} = Task.await(task)
@@ -108,7 +137,7 @@ defmodule Dotferno.Aggregator do
 
       PubSub.broadcast(Dotferno.PubSub, "biggest", %{
         biggest_today: biggest_today,
-        biggest_week: biggest_week,
+        biggest_week: biggest_week
       })
 
       state
@@ -120,9 +149,24 @@ defmodule Dotferno.Aggregator do
 
   def compute_biggest(now, all_burns) do
     # Compute biggest today
-    biggest_today = all_burns |> Enum.take_while(fn burn -> DateTime.compare(burn.timestamp, DateTime.add(now, -24 * 3600, :second)) == :gt end) |> Enum.sort_by(& &1.amount) |> Enum.reverse() |> Enum.take(5)
+    biggest_today =
+      all_burns
+      |> Enum.take_while(fn burn ->
+        DateTime.compare(burn.timestamp, DateTime.add(now, -24 * 3600, :second)) == :gt
+      end)
+      |> Enum.sort_by(& &1.amount)
+      |> Enum.reverse()
+      |> Enum.take(5)
+
     # Compute biggest this week
-    biggest_week = all_burns |> Enum.take_while(fn burn -> DateTime.compare(burn.timestamp, DateTime.add(now, -7 * 24 * 3600, :second)) == :gt end) |> Enum.sort_by(& &1.amount) |> Enum.reverse() |> Enum.take(5)
+    biggest_week =
+      all_burns
+      |> Enum.take_while(fn burn ->
+        DateTime.compare(burn.timestamp, DateTime.add(now, -7 * 24 * 3600, :second)) == :gt
+      end)
+      |> Enum.sort_by(& &1.amount)
+      |> Enum.reverse()
+      |> Enum.take(5)
 
     Logger.debug("Biggest today: #{inspect(biggest_today)}")
 
@@ -145,7 +189,7 @@ defmodule Dotferno.Aggregator do
 
   def aggregate(all_burns, now, slice_s, count) do
     check_ordered(all_burns)
-    buckets = Enum.map(0..count-1, fn _ -> 0 end)
+    buckets = Enum.map(0..(count - 1), fn _ -> 0 end)
     time_buckets = Enum.map(1..count, fn i -> DateTime.add(now, -i * slice_s, :second) end)
     buckets = aggregate_h(all_burns, slice_s, 0, buckets, time_buckets)
 
@@ -160,9 +204,11 @@ defmodule Dotferno.Aggregator do
     cond do
       bucket_index >= length(buckets) ->
         buckets
+
       DateTime.to_unix(burn.timestamp) > DateTime.to_unix(Enum.at(time_buckets, bucket_index)) ->
         buckets = List.update_at(buckets, bucket_index, &(&1 + burn.amount))
         aggregate_h(tail_burns, slice_s, bucket_index, buckets, time_buckets)
+
       true ->
         aggregate_h([burn | tail_burns], slice_s, bucket_index + 1, buckets, time_buckets)
     end
@@ -177,7 +223,7 @@ defmodule Dotferno.Aggregator do
   end
 
   def check_ordered(burns) do
-    if burns != burns |> Enum.sort_by(& &1.id) |> Enum.reverse do
+    if burns != burns |> Enum.sort_by(& &1.id) |> Enum.reverse() do
       raise ArgumentError, "Burns must be ordered by timestamp"
     end
   end
