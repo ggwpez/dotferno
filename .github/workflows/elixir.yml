@@ -33,4 +33,4 @@ jobs:
     - name: Run tests
       run: cd backend && mix compile
     - name: Check format
-      run: mix format --check-formatted
+      run: cd backend && mix format --check-formatted
