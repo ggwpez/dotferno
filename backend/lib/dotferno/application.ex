@@ -19,7 +19,7 @@ defmodule Dotferno.Application do
       # Start to serve requests, typically the last entry
       DotfernoWeb.Endpoint,
       Dotferno.Aggregator,
-      Dotferno.GraphQl,
+      Dotferno.GraphQl
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

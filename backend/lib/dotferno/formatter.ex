@@ -1,6 +1,6 @@
 defmodule Dotferno.Format do
   def plank_to_dot(amount) do
-    amount / 10000000000
+    amount / 10_000_000_000
   end
 
   def fmt_time_ago(time, now \\ nil) do
@@ -11,7 +11,7 @@ defmodule Dotferno.Format do
       since < 60 -> "just now"
       since < 3600 -> "#{d(since, 60)}m ago"
       since < 86400 -> "#{d(since, 3600)}h ago"
-      since < 604800 -> "#{d(since, 86400)}d ago"
+      since < 604_800 -> "#{d(since, 86400)}d ago"
       true -> time |> DateTime.to_iso8601()
     end
   end
@@ -23,8 +23,8 @@ defmodule Dotferno.Format do
   def fmt_dot(dot, no_unit \\ false) do
     cond do
       dot < 1000 -> {Kernel.round(dot), "DOT"}
-      dot < 1000000 -> {d(dot, 1000), "K DOT"}
-      dot < 1000000000 -> {d(dot, 1000000, 1), "M DOT"}
+      dot < 1_000_000 -> {d(dot, 1000), "K DOT"}
+      dot < 1_000_000_000 -> {d(dot, 1_000_000, 1), "M DOT"}
     end
     |> case do
       {v, _u} when no_unit -> v
@@ -33,7 +33,7 @@ defmodule Dotferno.Format do
   end
 
   defp d(a, b, prec \\ 0) do
-    a / b
+    (a / b)
     |> case do
       v when prec == 0 -> Kernel.round(v)
       v -> Float.round(v, prec)

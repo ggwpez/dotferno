@@ -32,7 +32,7 @@ defmodule DotfernoWeb.ConnCase do
   end
 
   setup tags do
-    #Dotferno.DataCase.setup_sandbox(tags)
+    # Dotferno.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end

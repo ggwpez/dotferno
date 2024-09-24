@@ -20,16 +20,17 @@ if System.get_env("PHX_SERVER") do
   config :dotferno, DotfernoWeb.Endpoint, server: true
 end
 
-subsquid_url = System.get_env("SUBSQUID_URL") ||
-  raise """
-  environment variable SUBSQUID_URL is missing.
-  """
+subsquid_url =
+  System.get_env("SUBSQUID_URL") ||
+    raise """
+    environment variable SUBSQUID_URL is missing.
+    """
 
 config :dotferno,
-    subsquid_url: subsquid_url
+  subsquid_url: subsquid_url
 
 if config_env() == :prod do
-  #database_url =
+  # database_url =
   #  System.get_env("DATABASE_URL") ||
   #    raise """
   #    environment variable DATABASE_URL is missing.
