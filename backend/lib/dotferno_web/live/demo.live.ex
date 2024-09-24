@@ -133,11 +133,11 @@ defmodule DotfernoWeb.DemoLive do
     <div class="flex flex-col xs:flex-row justify-center md:justify-between w-full">
       <div class="flex justify-end">
         <div class="p-4">
-            <div class="flex font-semibold rounded-lg items-center flex-col border glow py-6 px-6 bg-white dark:bg-gray-900 antialiased dark:border-gray-900">
-              <div class="text-xs">
+        <div class="flex font-semibold rounded-lg items-center flex-col border glow py-6 px-6 bg-white dark:bg-gray-900 antialiased dark:border-gray-900">
+              <div class="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl">
                 24 hrs
               </div>
-              <div class="text-lg text-center xs:text-left font-medium text-[#E6007A]">
+             <div class="text-lg text-center sm:text-left font-medium text-[#E6007A]">
                 <%= fmt_dot @sum_today %>
               </div>
             </div>
@@ -145,10 +145,10 @@ defmodule DotfernoWeb.DemoLive do
 
         <div class="p-4">
             <div class="flex font-semibold rounded-lg items-center flex-col border glow py-6 px-6 bg-white dark:bg-gray-900 antialiased dark:border-gray-900">
-              <div class="text-xs">
+              <div class="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl">
                 7 days
               </div>
-              <div class="text-lg text-center md:text-left font-medium text-[#E6007A]">
+             <div class="text-lg text-center sm:text-left font-medium text-[#E6007A]">
                 <%= fmt_dot @sum_year %>
               </div>
             </div>
@@ -156,12 +156,10 @@ defmodule DotfernoWeb.DemoLive do
       </div>
     </div>
 
-
-    <!-- card 1 -->
     <div class="p-4 w-full">
         <div class="flex rounded-lg h-full flex-col">
         <div class="flex items-center mb-5">
-        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-center md:text-left w-full text-gray-900 dark:text-gray-100 tracking-tight leading-tight border-b-2 border-pink-500 pb-2">
+        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-center md:text-left w-full text-gray-900 dark:text-gray-100 tracking-tight leading-tight pb-2">
         Burns per hour (24 hrs)
         </h2>
           </div>
@@ -231,7 +229,7 @@ defmodule DotfernoWeb.DemoLive do
     <div class="p-4 w-full">
       <div class="flex rounded-lg h-full flex-col">
         <div class="flex items-center mb-5">
-          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-center md:text-left w-full text-gray-900 dark:text-gray-100 tracking-tight leading-tight border-b-2 border-pink-500 pb-2">
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-center md:text-left w-full text-gray-900 dark:text-gray-100 tracking-tight leading-tight pb-2">
             Burns per day (7 days)
           </h2>
         </div>
