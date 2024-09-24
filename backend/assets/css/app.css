@@ -34,7 +34,7 @@
 }
 
 .group:hover .logo-animation {
-	@apply transform rotate-360 scale-110;
+	@apply transform scale-110;
 }
 
 /* BEGIN: Glitch stuff */

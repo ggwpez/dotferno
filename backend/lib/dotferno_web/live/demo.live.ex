@@ -1,12 +1,9 @@
 defmodule DotfernoWeb.DemoLive do
   use Phoenix.LiveView, layout: {DotfernoWeb.Layouts, :app}
-  import DotfernoWeb.CoreComponents
   import Dotferno.Format
   alias Dotferno.Aggregator
   alias Phoenix.PubSub
   import Dotferno.Format
-  import DotfernoWeb.Hooks
-  import Logger
 
   @impl true
   def mount(_params, _session, socket) do
@@ -64,7 +61,7 @@ defmodule DotfernoWeb.DemoLive do
   end
 
   @impl true
-  def handle_info(%{event: "new_burn", burn: burn}, socket) do
+  def handle_info(%{event: "new_burn"}, socket) do
     buckets_today = Aggregator.buckets_today()
     buckets_year = Aggregator.buckets_year()
 
@@ -90,7 +87,6 @@ defmodule DotfernoWeb.DemoLive do
 
   def update_state(%{buckets_today: {buckets_today, timings}}, socket) do
     buckets_today = buckets_today |> Enum.map(fn x -> Dotferno.Format.plank_to_dot(x) end)
-    x_today = Enum.map(1..length(buckets_today), & &1)
     sum_today = Enum.sum(buckets_today) |> Kernel.round()
 
     assign(socket,
@@ -102,7 +98,6 @@ defmodule DotfernoWeb.DemoLive do
 
   def update_state(%{buckets_year: {buckets_year, timings}}, socket) do
     buckets_year = buckets_year |> Enum.map(fn x -> Dotferno.Format.plank_to_dot(x) end)
-    x_year = Enum.map(1..length(buckets_year), & &1)
     sum_year = Enum.sum(buckets_year) |> Kernel.round()
 
     assign(socket,
@@ -122,11 +117,6 @@ defmodule DotfernoWeb.DemoLive do
 
   @impl true
   def render(assigns) do
-    buckets_today = assigns.buckets_today
-    buckets_year = assigns.buckets_year
-    timings_today = assigns.timings_today
-    timings_year = assigns.timings_year
-
     ~H"""
     <div class="flex flex-wrap">
 
@@ -164,7 +154,7 @@ defmodule DotfernoWeb.DemoLive do
         </h2>
           </div>
             <div class="text-gray-900 dark:text-white">
-              <.live_component module={DotfernoWeb.Components.ChartComponent} id={:chart_today} y={buckets_today} x={timings_today} type="bar" />
+              <.live_component module={DotfernoWeb.Components.ChartComponent} id={:chart_today} y={@buckets_today} x={@timings_today} type="bar" />
             </div>
         </div>
     </div>
@@ -236,13 +226,9 @@ defmodule DotfernoWeb.DemoLive do
         <div class="text-gray-900 dark:text-white">
         <.live_component module={DotfernoWeb.Components.ChartComponent}
           id={:chart_year}
-          y={buckets_year}
-          x={timings_year}
+          y={@buckets_year}
+          x={@timings_year}
           type="bar"
-          class="text-gray-900 dark:text-white"
-          data-config="{ chart: {...} }"
-          data-series={Jason.encode!(buckets_year)}
-          data-categories={Jason.encode!(timings_year)}
         />
       </div>
       </div>
