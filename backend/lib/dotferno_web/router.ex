@@ -18,7 +18,7 @@ defmodule DotfernoWeb.Router do
     pipe_through :browser
 
     live "/", DemoLive
-    #get "/", PageController, :home
+    # get "/", PageController, :home
   end
 
   # Other scopes may use custom stacks.

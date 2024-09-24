@@ -21,20 +21,25 @@ defmodule DotfernoWeb.Components.Charts do
       class="[&>div]:mx-auto"
       phx-hook="Chart"
       phx-update="ignore"
-      data-config={Jason.encode!(trim %{
-        height: @height,
-        width: @width,
-        type: @type,
-        animations: %{
-          enabled: true
-        },
-        toolbar: %{
-          show: @toolbar
-        }
-      })}
+      data-config={
+        Jason.encode!(
+          trim(%{
+            height: @height,
+            width: @width,
+            type: @type,
+            animations: %{
+              enabled: true
+            },
+            toolbar: %{
+              show: @toolbar
+            }
+          })
+        )
+      }
       data-series={Jason.encode!(@dataset)}
       data-categories={Jason.encode!(@categories)}
-    ></div>
+    >
+    </div>
     """
   end
 
@@ -80,6 +85,7 @@ defmodule DotfernoWeb.Components.ChartComponent do
         type: "bar"
       }
     ]
+
     {
       :ok,
       socket

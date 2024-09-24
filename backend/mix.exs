@@ -12,7 +12,7 @@ defmodule Dotferno.MixProject do
       deps: deps(),
       preferred_cli_env: [
         "test.watch": :test
-      ],
+      ]
     ]
   end
 
@@ -38,7 +38,6 @@ defmodule Dotferno.MixProject do
       {:absinthe_client, "~> 0.1.0"},
       {:typed_struct, "~> 0.1.4"},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
-
       {:phoenix, "~> 1.7.12"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.10"},

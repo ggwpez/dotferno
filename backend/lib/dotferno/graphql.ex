@@ -1,8 +1,15 @@
 defmodule Dotferno.Schema.Burn do
   defstruct [:id, :blockNumber, :timestamp, :amount, :aggregated]
 
-  def from_map(%{"id" => id, "blockNumber" => blockNumber, "timestamp" => timestamp, "amount" => amount, "aggregated" => aggregated}) do
+  def from_map(%{
+        "id" => id,
+        "blockNumber" => blockNumber,
+        "timestamp" => timestamp,
+        "amount" => amount,
+        "aggregated" => aggregated
+      }) do
     {:ok, timestamp, _} = DateTime.from_iso8601(timestamp)
+
     %__MODULE__{
       id: id,
       blockNumber: blockNumber,
@@ -24,51 +31,64 @@ defmodule Dotferno.GraphQl do
   end
 
   @impl true
-  def init(%{ :url => url }) do
-    IO.puts "Connecting to GraphQL server..."
+  def init(%{:url => url}) do
+    IO.puts("Connecting to GraphQL server...")
     client = Req.new(base_url: url) |> AbsintheClient.attach()
 
     send(self(), "fetch_new")
     :timer.send_after(10_000, self(), "fetch_old")
     :timer.send_interval(60_000, self(), "fetch_new")
 
-    {:ok, %{ :client => client, :newest_id => "", :oldest_id => ""}}
+    {:ok, %{:client => client, :newest_id => "", :oldest_id => ""}}
   end
 
   @impl true
-  def handle_info("fetch_new", %{ :client => client, :newest_id => id }=state) do
+  def handle_info("fetch_new", %{:client => client, :newest_id => id} = state) do
     Logger.info("Fetching burns since id #{id}...")
+
     case fetch_burns(client, {:since, id}) do
-      {:ok, []} -> {:noreply, state}
+      {:ok, []} ->
+        {:noreply, state}
+
       {:ok, burns} ->
-        burns = for burn <- burns do
-          burn = Dotferno.Schema.Burn.from_map(burn)
-          PubSub.broadcast(Dotferno.PubSub, "new_burn", burn)
-          burn.id
-        end
+        burns =
+          for burn <- burns do
+            burn = Dotferno.Schema.Burn.from_map(burn)
+            PubSub.broadcast(Dotferno.PubSub, "new_burn", burn)
+            burn.id
+          end
+
         first = Enum.at(burns, 0)
         state = Map.put(state, :newest_id, first)
         oldest = Enum.at(burns, -1)
         state = Map.put(state, :oldest_id, oldest)
 
         {:noreply, state}
-      {:error, errors} -> Logger.error("Error fetching burns: #{inspect(errors)}")
+
+      {:error, errors} ->
+        Logger.error("Error fetching burns: #{inspect(errors)}")
     end
   end
 
   @impl true
-  def handle_info("fetch_old", %{ :client => client, :oldest_id => id }=state) do
+  def handle_info("fetch_old", %{:client => client, :oldest_id => id} = state) do
     Logger.info("Fetching old until id #{id}...")
+
     case fetch_burns(client, {:until, id}) do
-      {:ok, []} -> {:noreply, state}
+      {:ok, []} ->
+        {:noreply, state}
+
       {:ok, burns} ->
-        last = for burn <- burns do
-          burn = Dotferno.Schema.Burn.from_map(burn)
-          PubSub.broadcast(Dotferno.PubSub, "new_burn", burn)
-          burn
-        end |> List.last()
+        last =
+          for burn <- burns do
+            burn = Dotferno.Schema.Burn.from_map(burn)
+            PubSub.broadcast(Dotferno.PubSub, "new_burn", burn)
+            burn
+          end
+          |> List.last()
 
         backfill_cutoff = DateTime.utc_now() |> DateTime.add(-8, :day)
+
         if last.timestamp < backfill_cutoff do
           Logger.info("Backfill complete. Listening for new burns.")
         else
@@ -77,7 +97,9 @@ defmodule Dotferno.GraphQl do
         end
 
         {:noreply, Map.put(state, :oldest_id, last.id)}
-      {:error, errors} -> Logger.error("Error fetching burns: #{inspect(errors)}")
+
+      {:error, errors} ->
+        Logger.error("Error fetching burns: #{inspect(errors)}")
     end
   end
 
@@ -101,11 +123,14 @@ defmodule Dotferno.GraphQl do
         }
       }
     """
+
     case Req.post(client, graphql: query) do
       {:error, %{"errors" => errors}} ->
-          {:error, errors}
+        {:error, errors}
+
       {:ok, %{body: %{"data" => %{"burns" => burns}}}} ->
         Logger.info("Fetched #{length(burns)} burns")
+
         if burns == [] do
           {:ok, []}
         else

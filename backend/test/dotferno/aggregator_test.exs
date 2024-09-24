@@ -6,9 +6,9 @@ defmodule DotfernoWeb.AggregatorTest do
   alias Dotferno.Schema.Burn
   alias Dotferno.Schema.Summary
 
-  #test "aggregator removes old" do
+  # test "aggregator removes old" do
   #  {:ok, pid} = Aggregator.start_link(name: :test)
-#
+  #
   #  for i <- 30..0//-1 do
   #    PubSub.broadcast(Dotferno.PubSub, "new_burn", %Burn{
   #      id: -i,
@@ -18,31 +18,46 @@ defmodule DotfernoWeb.AggregatorTest do
   #      blockNumber: 1
   #    })
   #  end
-#
+  #
   #  assert GenServer.call(pid, :buckets_today) == [100 | Enum.map(1..23, fn _ -> 100 end)]
-  #end
+  # end
 
   test "aggregator computes daily summary" do
     now = DateTime.from_naive!(~N[2021-01-01 00:00:00], "Etc/UTC")
 
-    burns = for i <- 0..9 do
-      %Burn{
-        id: -i,
-        timestamp: now |> DateTime.add(-i, :second),
-        aggregated: i * 100,
-        amount: 100,
-        blockNumber: 1
-      }
-    end
+    burns =
+      for i <- 0..9 do
+        %Burn{
+          id: -i,
+          timestamp: now |> DateTime.add(-i, :second),
+          aggregated: i * 100,
+          amount: 100,
+          blockNumber: 1
+        }
+      end
 
     assert Aggregator.aggregate!(burns, now, 1, 5) |> elem(0) == [100, 100, 100, 100, 100]
     assert Aggregator.aggregate!(burns, now, 2, 3) |> elem(0) == [200, 200, 200]
     assert Aggregator.aggregate!([], now, 2, 3) |> elem(0) == [0, 0, 0]
-    assert Aggregator.aggregate!(burns, now, 1, 11) |> elem(0) == [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 0]
+
+    assert Aggregator.aggregate!(burns, now, 1, 11) |> elem(0) == [
+             100,
+             100,
+             100,
+             100,
+             100,
+             100,
+             100,
+             100,
+             100,
+             100,
+             0
+           ]
 
     assert_raise ArgumentError, fn ->
       Aggregator.aggregate!(burns, now, 0, 3)
     end
+
     assert_raise ArgumentError, fn ->
       Aggregator.aggregate!(burns, now, 1, 0)
     end

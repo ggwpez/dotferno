@@ -1,4 +1,4 @@
- <!--                                                                                                                                                                                                       
+<!--                                                                                                                                                                                                       
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  @@@@,,,,,,,,,,,,,,,,,,,,,,(@@(                                                                                                                                      ,&@@/,,,,,,,,,,,,,,,,,,,,,,,,,#@@@@
  @@@@,,,,,,,,,,,,,,,,,,,,#@@.                                                                                                                                           .@@&,,,,,,,,,,,,,,,,,,,,,,,(@@@@
@@ -93,15 +93,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
-    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-    <link rel="manifest" href="/images/site.webmanifest">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="manifest" href="/images/site.webmanifest" />
     <.live_title>
       <%= assigns[:page_title] || "Dotferno" %>
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts">
+    </script>
   </head>
   <body class="text-gray-900 dark:text-white bg-white dark:bg-gray-900 antialiased antialiased">
     <%= @inner_content %>
