@@ -82,11 +82,11 @@ defmodule Dotferno.GraphQl do
   end
 
   defp fetch_burns(client, {:since, id}) do
-    query(client, 'id_gt: "#{id}"')
+    query(client, ~s(id_gt: "#{id}"))
   end
 
   defp fetch_burns(client, {:until, id}) do
-    query(client, 'id_lt: "#{id}"')
+    query(client, ~s(id_lt: "#{id}"))
   end
 
   defp query(client, pred) do

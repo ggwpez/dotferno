@@ -12,9 +12,26 @@ module.exports = {
     "../lib/dotferno_web/**/*.*ex"
   ],
   theme: {
+    screens: {
+      'xs': '475px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
     extend: {
       colors: {
         brand: "#FD4F00",
+      },
+      keyframes: {
+        'spin-slow': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        }
+      },
+      animation: {
+        'spin-slow': 'spin-slow 10s linear infinite',
       }
     },
   },

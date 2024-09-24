@@ -2,8 +2,6 @@ defmodule Dotferno.Aggregator do
   use GenServer
   alias Phoenix.PubSub
   require Logger
-  alias Dotferno.Schema.Burn
-  alias Dotferno.Schema.Aggregate
 
   def buckets_today() do
     GenServer.call(__MODULE__, :buckets_today)
@@ -21,7 +19,6 @@ defmodule Dotferno.Aggregator do
     GenServer.call(__MODULE__, :biggest_week)
   end
 
-  @impl true
   def start_link(opts \\ []) do
     GenServer.start_link(__MODULE__, :ok, opts ++ [name: __MODULE__])
   end
@@ -58,6 +55,15 @@ defmodule Dotferno.Aggregator do
   @impl true
   def handle_info(:update, state) do
     {:noreply, recompute(state)}
+  end
+
+  @impl true
+  def handle_info(burn, state) do
+    all_burns = [burn | state.all_burns]
+
+    Logger.debug("Ingesting burn into the aggregator. Total burns: #{length(all_burns)}")
+
+    {:noreply, %{state | all_burns: all_burns, needs_update: true }}
   end
 
   @resolution_today 3600
@@ -133,7 +139,7 @@ defmodule Dotferno.Aggregator do
   @doc """
   Aggregate a list of burns into at most `count` summaries of `slice_s` seconds duration.
   """
-  def aggregate(all_burns, now, slice_s, count) when slice_s <= 0 or count <= 0 do
+  def aggregate(_all_burns, _now, slice_s, count) when slice_s <= 0 or count <= 0 do
     {:error, "slice_s and count must be positive"}
   end
 
@@ -146,7 +152,7 @@ defmodule Dotferno.Aggregator do
     {:ok, {buckets, time_buckets}}
   end
 
-  defp aggregate_h([], slice_s, bucket_index, buckets, time_buckets) do
+  defp aggregate_h([], _slice_s, _bucket_index, buckets, _time_buckets) do
     buckets
   end
 
@@ -162,16 +168,7 @@ defmodule Dotferno.Aggregator do
     end
   end
 
-  @impl true
-  def handle_info(burn, state) do
-    all_burns = [burn | state.all_burns]
-
-    Logger.debug("Ingesting burn into the aggregator. Total burns: #{length(all_burns)}")
-
-    {:noreply, %{state | all_burns: all_burns, needs_update: true }}
-  end
-
-  def update_today(burn, hrs_ago, state) do
+  def update_today(_burn, _hrs_ago, state) do
     state
   end
 

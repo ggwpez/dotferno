@@ -27,7 +27,7 @@ defmodule Dotferno.Format do
       dot < 1000000000 -> {d(dot, 1000000, 1), "M DOT"}
     end
     |> case do
-      {v, u} when no_unit -> v
+      {v, _u} when no_unit -> v
       {v, u} -> "#{v}#{u}"
     end
   end
