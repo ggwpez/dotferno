@@ -26,7 +26,8 @@ export const processor = new SubstrateBatchProcessor()
     .addEvent({
         name: [
             events.balances.burned.name,
-            events.treasury.burnt.name
+            events.balances.minted.name,
+            events.treasury.burnt.name,
         ],
     })
     .setFields({

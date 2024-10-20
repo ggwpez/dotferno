@@ -28,28 +28,29 @@ function getBurns(ctx: ProcessorContext<Store>, aggregated: bigint): Burn[] {
     for (let block of ctx.blocks) {
         const ti = totalIssuance.v0.get(block.header)
 
-        /*for (let event of block.events) {
-            if (event.name != events.balances.burned.name &&
-                event.name != events.treasury.burnt.name
+        for (let event of block.events) {
+            if (event.name != events.treasury.burnt.name &&
+                event.name != events.balances.burned.name &&
+                event.name != events.balances.minted.name
             ) {
                 continue
-            }asdf
+            }
 
-            let burned: bigint
+            let burned: bigint = 0n;
 
             if (events.balances.burned.v9420.is(event)) {
                 let { amount } = events.balances.burned.v9420.decode(event)
-                burned = amount
-            }
-            else if (events.treasury.burnt.v0.is(event)) {
+                burned += amount
+            } else if (events.treasury.burnt.v0.is(event)) {
                 let amount = events.treasury.burnt.v0.decode(event)
-                burned = amount
-            }
-            else if (events.treasury.burnt.v9170.is(event)) {
+                burned += amount
+            } else if (events.treasury.burnt.v9170.is(event)) {
                 let { burntFunds } = events.treasury.burnt.v9170.decode(event)
-                burned = burntFunds
-            }
-            else {
+                burned += burntFunds
+            } else if (events.balances.minted.v9420.is(event)) {
+                let { amount } = events.balances.minted.v9420.decode(event)
+                burned -= amount
+            } else {
                 throw new Error('Unsupported spec')
             }
 
@@ -61,9 +62,9 @@ function getBurns(ctx: ProcessorContext<Store>, aggregated: bigint): Burn[] {
                 blockNumber: block.header.height,
                 timestamp: new Date(block.header.timestamp),
                 amount: burned,
-                aggregated,
+                aggregated
             }))
-        }*/
+        }
     }
     return burns
 }

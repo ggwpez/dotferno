@@ -4,7 +4,8 @@
   "pallets": {
     "Balances": {
       "events": [
-        "Burned"
+        "Burned",
+        "Minted"
       ],
       "calls": [],
       "storage": [
