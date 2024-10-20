@@ -1,4 +1,5 @@
 import Config
+require Logger
 
 # config/runtime.exs is executed for all environments, including
 # during releases. It is executed after compilation and before the
@@ -25,6 +26,8 @@ subsquid_url =
     raise """
     environment variable SUBSQUID_URL is missing.
     """
+
+Logger.info("Subsquid URL: #{subsquid_url}")
 
 config :dotferno,
   subsquid_url: subsquid_url
